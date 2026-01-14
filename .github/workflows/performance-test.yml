@@ -1,0 +1,42 @@
+name: Performance Test
+
+on:
+  workflow_dispatch: # 允许手动触发
+  schedule:
+    # 默认每天运行一次，可以按需修改
+    - cron: '0 */3 * * *'
+
+concurrency:
+  group: performance-test
+  cancel-in-progress: true
+
+jobs:
+  performance-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Update packages
+        run: sudo apt update
+        
+      - name: Install wrk
+        run: sudo apt install wrk -y
+        
+      - name: Run performance test 10000 times
+        run: |
+          for i in $(seq 1 100); do
+            echo "Running iteration $i of 100"
+            wrk -t4 -c88 -d30s https://www.lapangbaba.com/
+            for k in $(seq 1 100); do
+              sleep 1
+              echo "Waiting for $k second..."
+              if [ $((k % 10)) -eq 0 ]; then
+                wrk -t4 -c88 -d5s https://www.lapangbaba.com/
+              fi
+            done
+          done
+        
+      - name: Print test completion
+        run: echo "Performance test completed"
