@@ -29,11 +29,11 @@ jobs:
           for i in $(seq 1 100); do
             echo "Running iteration $i of 100"
             wrk -t4 -c88 -d30s https://www.lapangbaba.com/
-            for k in $(seq 1 100); do
+            for k in $(seq 1 50); do
               sleep 1
               echo "Waiting for $k second..."
               if [ $((k % 10)) -eq 0 ]; then
-                wrk -t4 -c100 -d10s https://www.lapangbaba.com/
+                wrk -t4 -c130 -d10s https://www.lapangbaba.com/
               fi
             done
           done
