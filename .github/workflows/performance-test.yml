@@ -33,7 +33,7 @@ jobs:
               sleep 1
               echo "Waiting for $k second..."
               if [ $((k % 10)) -eq 0 ]; then
-                wrk -t4 -c88 -d5s https://www.lapangbaba.com/
+                wrk -t4 -c100 -d10s https://www.lapangbaba.com/
               fi
             done
           done
